@@ -180,6 +180,9 @@
     <Compile Include="..\TrickyUnits\gtk\QuickGTK.cs">
       <Link>Dependencies\TrickyUnits\gtk\QuickGTK.cs</Link>
     </Compile>
+    <Compile Include="..\TrickyUnits\gtk\ListBox.cs">
+      <Link>Dependencies\TrickyUnits\gtk\ListBox.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dependencies\" />

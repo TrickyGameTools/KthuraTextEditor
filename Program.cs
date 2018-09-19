@@ -60,6 +60,9 @@ namespace KthuraTextEditor
         static Button bSave;
         static Button bSaveAll;
         static Button bQuit;
+        static ListBox OpenFiles;
+        static Notebook Tabber;
+
 
         // Special widgets
         static List<Widget> RequiresFile = new List<Widget>(); // Only allow these when a file has actually been loaded and activated.
@@ -119,6 +122,18 @@ namespace KthuraTextEditor
             Menu2.Add(bSave);
             Menu2.Add(bSaveAll);
             Menu2.Add(bQuit);
+            OpenFiles = new ListBox();
+            OpenFiles.AddTo(WorkBox);
+            OpenFiles.SetSizeRequest(250, base_height - girl_height);
+            Tabber = new Notebook();
+            Tabber.SetSizeRequest(base_width - 250, base_height - girl_height);
+            var about = new Label("Kthura Text Editor\n\nCoded by: Tricky\n(c) Jeroen P. Broks\n\nReleased under the terms of the GPL 3\n\n" + MKL.All());
+            about.SetAlignment(0, 0);
+            Tabber.AppendPage(about, new Label("About"));
+            Tabber.AppendPage(new Label("Coming Soon"), new Label("General Data"));
+            Tabber.AppendPage(new Label("Coming Soon"), new Label("Objects"));
+            Tabber.AppendPage(new Label("Coming Soon"), new Label("Misc"));
+            WorkBox.Add(Tabber);
             win.Add(MainBox);
             win.ShowAll();
             Application.Run();
