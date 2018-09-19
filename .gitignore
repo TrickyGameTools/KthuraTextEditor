@@ -33,9 +33,19 @@ Thumbs.db
 *.dmg
 *.app
 
+# Mac crap files nobody ever needs and which Apple really should remove from the system or come up with a better solution for
+._*
+.DS_Store
+
 # resharper
 *_Resharper.*
 *.Resharper
 
 # dotCover
 *.dotCover
+
+
+# MKL help files
+MKL*
+*MKL*
+
