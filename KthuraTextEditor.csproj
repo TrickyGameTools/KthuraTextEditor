@@ -183,6 +183,9 @@
     <Compile Include="..\TrickyUnits\gtk\ListBox.cs">
       <Link>Dependencies\TrickyUnits\gtk\ListBox.cs</Link>
     </Compile>
+    <Compile Include="..\TrickyUnits\OpenURI.cs">
+      <Link>Dependencies\TrickyUnits\OpenURI.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dependencies\" />
