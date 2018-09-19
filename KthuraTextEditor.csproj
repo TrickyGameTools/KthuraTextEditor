@@ -52,6 +52,7 @@
     <EmbeddedResource Include="gtk-gui\gui.stetic">
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Kthura.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
@@ -190,6 +191,8 @@
     <None Include="..\JCR6\Drivers\Compression\zlib\readme.md">
       <Link>Dependencies\JCR6\Drivers\Compression\zlib\readme.md</Link>
     </None>
+    <None Include="Properties\Kthura.icns" />
+    <None Include="Properties\Kthura.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
