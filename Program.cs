@@ -80,6 +80,8 @@ namespace KthuraTextEditor
         static TextView eSettings;
         static ScrolledWindow swMisc;
         static TreeView vMisc;
+        static ScrolledWindow swGeneralData;
+        static TreeView eGeneralData;
 
 
         // Special widgets
@@ -275,8 +277,12 @@ namespace KthuraTextEditor
             vMisc.AppendColumn(tcMisc);
             swMisc.Add(vMisc);
             RequiresFile.Add(vMisc);
+            swGeneralData = new ScrolledWindow();
+            eGeneralData = new TreeView();
+            swGeneralData.Add(eGeneralData);
+            RequiresFile.Add(eGeneralData);
             Tabber.AppendPage(about, new Label("About"));
-            Tabber.AppendPage(new Label("Coming Soon"), new Label("General Data"));
+            Tabber.AppendPage(swGeneralData, new Label("General Data"));
             Tabber.AppendPage(swObjects, new Label("Objects"));
             Tabber.AppendPage(swSettings, new Label("Settings"));
             Tabber.AppendPage(swMisc, new Label("Misc"));
