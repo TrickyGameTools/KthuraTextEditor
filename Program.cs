@@ -137,6 +137,7 @@ namespace KthuraTextEditor
 
 
         static void Load(string file){
+            Console.WriteLine($"Loading: {file}");
             var j = JCR6.Dir(file);
             if (j == null) { QuickGTK.Error("JCR6 failed to analyse this mapfile\n\n" + JCR6.JERROR); return;  }
             foreach(string musthave in kthuramusthave){
@@ -156,6 +157,10 @@ namespace KthuraTextEditor
                 {
                     case "DATA":
                         lkthura.GeneralData = j.LoadStringMap("Data");
+                        foreach(string k in lkthura.GeneralData.Keys){
+                            lkthura.LsGenData.AppendValues(k, lkthura.GeneralData[k]);
+                            //QuickGTK.Info($"{k} = {lkthura.GeneralData[k]}");
+                        }
                         break;
                     case "OBJECTS":
                         lkthura.Objects = j.LoadString("Objects");
@@ -206,6 +211,7 @@ namespace KthuraTextEditor
                 }
                 lsMisc.AppendValues(k, ln);
                 vMisc.Model = lsMisc;
+                eGeneralData.Model = Current.LsGenData;
             }
 
 
@@ -280,6 +286,19 @@ namespace KthuraTextEditor
             swGeneralData = new ScrolledWindow();
             eGeneralData = new TreeView();
             swGeneralData.Add(eGeneralData);
+            var ncGD = new CellRendererText();
+            var tcGD = new TreeViewColumn();
+            tcGD.Title = "Key:";
+            tcGD.PackStart(ncGD, true);
+            tcGD.AddAttribute(ncGD, "text", 0);
+            eGeneralData.AppendColumn(tcGD);
+            ncGD = new CellRendererText();
+            ncGD.Editable = true;
+            tcGD = new TreeViewColumn();
+            tcGD.Title = "Value:";
+            tcGD.PackStart(ncGD, true);
+            tcGD.AddAttribute(ncGD, "text", 1);
+            eGeneralData.AppendColumn(tcGD);
             RequiresFile.Add(eGeneralData);
             Tabber.AppendPage(about, new Label("About"));
             Tabber.AppendPage(swGeneralData, new Label("General Data"));
