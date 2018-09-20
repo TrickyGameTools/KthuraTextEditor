@@ -250,10 +250,14 @@ namespace KthuraTextEditor
             Menu2.Add(bQuit);
             bGit.Clicked += delegate (object sender, EventArgs a) { OURI.OpenUri("https://github.com/TrickyGameTools/KthuraTextEditor"); };
             bOpen.Clicked += OnOpenFile;
+            var ofscroll = new ScrolledWindow();
             OpenFiles = new ListBox("Loaded Kthura Maps");
-            OpenFiles.AddTo(WorkBox);
+            ofscroll.Add(OpenFiles.Gadget);
+            ofscroll.SetSizeRequest(250, base_height - girl_height);
+            WorkBox.Add(ofscroll);
             OpenFiles.SetSizeRequest(250, base_height - girl_height);
             OpenFiles.Gadget.CursorChanged += OnFileSelect;
+
             Tabber = new Notebook();
             Tabber.SetSizeRequest(base_width - 250, base_height - girl_height);
             var about = new Label("Kthura Text Editor\n\nCoded by: Tricky\n(c) Jeroen P. Broks\n\nReleased under the terms of the GPL 3\n\n" + MKL.All());
