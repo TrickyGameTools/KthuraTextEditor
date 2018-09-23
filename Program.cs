@@ -328,12 +328,16 @@ namespace KthuraTextEditor
             var about = new Label("Kthura Text Editor\n\nCoded by: Tricky\n(c) Jeroen P. Broks\n\nReleased under the terms of the GPL 3\n\n" + MKL.All());
             about.SetAlignment(0, 0);
             eObjects = new TextView();
+            eObjects.ModifyText(StateType.Normal, new Gdk.Color( 255, 0, 0));
+            eObjects.ModifyBase(StateType.Normal, new Gdk.Color(25, 0, 0));
             eObjects.Buffer.Changed += OnObjects;
             swObjects = new ScrolledWindow();
             swObjects.SetSizeRequest(base_width - 250, base_height - girl_height);
             swObjects.Add(eObjects);
             RequiresFile.Add(eObjects);
             eSettings = new TextView();
+            eSettings.ModifyBase(StateType.Normal, new Gdk.Color(0, 0, 25));
+            eSettings.ModifyText(StateType.Normal, new Gdk.Color(0, 180, 255));
             eSettings.Buffer.Changed += OnSettings;
             swSettings = new ScrolledWindow();
             swSettings.SetSizeRequest(base_width - 250, base_height - girl_height);
