@@ -34,6 +34,7 @@ using UseJCR6;
 namespace KthuraTextEditor
 {
     class KthuraLoadedFile{
+        public string FileName;
         public string Objects;
         public string Settings;
         public SortedDictionary<string, byte[]> Unknown = new SortedDictionary<string, byte[]>();
@@ -71,7 +72,7 @@ namespace KthuraTextEditor
         static Button bClose;
         static Button bSave;
         static Button bSaveAll;
-        static Button bQuit;
+        static Button bInfo;
         static ListBox OpenFiles;
         static Notebook Tabber;
         static ScrolledWindow swObjects;
@@ -150,6 +151,7 @@ namespace KthuraTextEditor
             }
             var lkthura = new KthuraLoadedFile();
             Loaded[file] = lkthura;
+            lkthura.FileName = file;
             foreach (string e in j.Entries.Keys)
             {
                 var iEntry = j.Entries[e];
@@ -233,6 +235,27 @@ namespace KthuraTextEditor
             Current.Settings = eSettings.Buffer.Text;
         }
 
+        static void OnGeneral(object o, EditedArgs args){
+            if (!editable) return;
+            TreeIter iter;
+            Current.LsGenData.GetIter(out iter, new TreePath(args.Path));
+            var f = (string)Current.LsGenData.GetValue(iter, 0);
+            var v = args.NewText;
+            Current.GeneralData[f] = v;
+            editable = false;
+            Current.LsGenData.SetValue(iter,1, v);
+            editable = true;
+        }
+
+        static void OnInfo(object o, EventArgs e){
+            var info = "Global information\n\n";
+            var yn = new Dictionary<bool, string>();
+            yn[true] = "YES";
+            yn[false] = "NO";
+            info += $"Filename: {Current.FileName}\nSize Objects:{Current.Objects.Length}\nSize Settings:{Current.Settings.Length}\nFields General Data:{Current.GeneralData.Count}\nAllow lzma packing: {yn[Current.allowlzma]}\nAllow zlib packing:{yn[Current.allowzlib]}";
+            QuickGTK.Info(info);
+        }
+
 
         static void initGUI(){
             Application.Init();
@@ -258,15 +281,16 @@ namespace KthuraTextEditor
             bClose = new Button("Close"); RequiresFile.Add(bClose);
             bSave = new Button("Save"); RequiresFile.Add(bSave);
             bSaveAll = new Button("SaveAll");
-            bQuit = new Button("Quit");
+            bInfo = new Button("Info"); RequiresFile.Add(bInfo);
             Menu1.Add(bGit);
             Menu1.Add(bOpen);
             Menu1.Add(bClose);
             Menu2.Add(bSave);
             Menu2.Add(bSaveAll);
-            Menu2.Add(bQuit);
+            Menu2.Add(bInfo);
             bGit.Clicked += delegate (object sender, EventArgs a) { OURI.OpenUri("https://github.com/TrickyGameTools/KthuraTextEditor"); };
             bOpen.Clicked += OnOpenFile;
+            bInfo.Clicked += OnInfo;
             var ofscroll = new ScrolledWindow();
             OpenFiles = new ListBox("Loaded Kthura Maps");
             ofscroll.Add(OpenFiles.Gadget);
@@ -316,6 +340,7 @@ namespace KthuraTextEditor
             eGeneralData.AppendColumn(tcGD);
             ncGD = new CellRendererText();
             ncGD.Editable = true;
+            ncGD.Edited += OnGeneral;
             tcGD = new TreeViewColumn();
             tcGD.Title = "Value:";
             tcGD.PackStart(ncGD, true);
