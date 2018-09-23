@@ -40,9 +40,11 @@ namespace KthuraTextEditor
         public SortedDictionary<string, byte[]> Unknown = new SortedDictionary<string, byte[]>();
         public bool allowzlib;
         public bool allowlzma;
+        public bool MODIFIED;
         public Dictionary<string, string> GeneralData = new Dictionary<string, string>();
         public ListStore LsGenData = new ListStore(typeof(string), typeof(string));
         public Dictionary<object, string> LinkGeneralData = new Dictionary<object, string>();
+        public void Save() => MainClass.Save(this,FileName);
 
     }
 
@@ -138,6 +140,18 @@ namespace KthuraTextEditor
             foreach (string f in Loaded.Keys) OpenFiles.AddItem(f);
         }
 
+        static public void Save(KthuraLoadedFile me,string filename){
+            var s = "Store"; if (me.allowlzma) s = "lzma"; else if (me.allowzlib) s = "zlib";
+            var j = new TJCRCreate(filename, s);
+            j.NewStringMap(me.GeneralData, "Data",s);
+            j.AddString(me.Objects, "Objects", s);
+            j.AddString(me.Settings, "Settings", s);
+            foreach(string name in me.Unknown.Keys){
+                j.AddBytes(me.Unknown[name], name, s);
+            }
+            j.Close();
+            me.MODIFIED = false;
+        }
 
         static void Load(string file){
             Console.WriteLine($"Loading: {file}");
@@ -226,6 +240,7 @@ namespace KthuraTextEditor
             if (!editable) return;
             if (Current == null) { QuickGTK.Error("Internal Error! -- Null call"); return; }
             Current.Objects = eObjects.Buffer.Text;
+            Current.MODIFIED = true;
         }
 
 
@@ -233,6 +248,7 @@ namespace KthuraTextEditor
             if (!editable) return;
             if (Current == null) { QuickGTK.Error("Internal Error! -- Null call"); return; }
             Current.Settings = eSettings.Buffer.Text;
+            Current.MODIFIED = true;
         }
 
         static void OnGeneral(object o, EditedArgs args){
@@ -245,6 +261,7 @@ namespace KthuraTextEditor
             editable = false;
             Current.LsGenData.SetValue(iter,1, v);
             editable = true;
+            Current.MODIFIED = true;
         }
 
         static void OnInfo(object o, EventArgs e){
@@ -254,6 +271,13 @@ namespace KthuraTextEditor
             yn[false] = "NO";
             info += $"Filename: {Current.FileName}\nSize Objects:{Current.Objects.Length}\nSize Settings:{Current.Settings.Length}\nFields General Data:{Current.GeneralData.Count}\nAllow lzma packing: {yn[Current.allowlzma]}\nAllow zlib packing:{yn[Current.allowzlib]}";
             QuickGTK.Info(info);
+        }
+
+        static public void Closure(){
+            foreach(string s in Loaded.Keys){
+                var l = Loaded[s];
+                if (l.MODIFIED && QuickGTK.Confirm($"File {s} has been modified!\n\nDo you wish to save it?")) l.Save();                                
+            }
         }
 
 
@@ -291,6 +315,7 @@ namespace KthuraTextEditor
             bGit.Clicked += delegate (object sender, EventArgs a) { OURI.OpenUri("https://github.com/TrickyGameTools/KthuraTextEditor"); };
             bOpen.Clicked += OnOpenFile;
             bInfo.Clicked += OnInfo;
+            bSave.Clicked += delegate (object sender, EventArgs a) { Current.Save(); };
             var ofscroll = new ScrolledWindow();
             OpenFiles = new ListBox("Loaded Kthura Maps");
             ofscroll.Add(OpenFiles.Gadget);
