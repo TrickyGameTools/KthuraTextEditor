@@ -316,6 +316,7 @@ namespace KthuraTextEditor
             bOpen.Clicked += OnOpenFile;
             bInfo.Clicked += OnInfo;
             bSave.Clicked += delegate (object sender, EventArgs a) { Current.Save(); };
+            bSaveAll.Clicked += delegate(object sender, EventArgs a) { foreach (KthuraLoadedFile l in Loaded.Values) if (l.MODIFIED) l.Save(); };
             var ofscroll = new ScrolledWindow();
             OpenFiles = new ListBox("Loaded Kthura Maps");
             ofscroll.Add(OpenFiles.Gadget);
