@@ -20,7 +20,7 @@
 // 		
 // 	Exceptions to the standard GNU license are available with Jeroen's written permission given prior 
 // 	to the project the exceptions are needed for.
-// Version: 18.09.19
+// Version: 18.09.23
 // EndLic
 
 ﻿using System;
@@ -54,6 +54,8 @@ namespace KthuraTextEditor
         const int girl_height = 96;
 
         readonly static string[] kthuramusthave = "Data;Objects;Settings".Split(';');
+
+        static bool editable;
 
         // widgets
         static MainWindow win;
@@ -98,7 +100,7 @@ namespace KthuraTextEditor
 
         static void initMKL(){
             MKL.Lic    ("Kthura Text Editor - Program.cs","GNU General Public License 3");
-            MKL.Version("Kthura Text Editor - Program.cs","18.09.19");
+            MKL.Version("Kthura Text Editor - Program.cs","18.09.23");
             QOpen.Hello();
             QuickGTK.Hello();
             ListBox.Hello();
@@ -188,6 +190,7 @@ namespace KthuraTextEditor
         }
 
         static void OnFileSelect(object sender, EventArgs a){
+            editable = false;
             AutoEnable();
             var i = OpenFiles.ItemText;
             if (i == "") return;
@@ -213,9 +216,23 @@ namespace KthuraTextEditor
                 vMisc.Model = lsMisc;
                 eGeneralData.Model = Current.LsGenData;
             }
-
+            editable = true;
 
         }
+
+        static void OnObjects(object sender ,EventArgs e){
+            if (!editable) return;
+            if (Current == null) { QuickGTK.Error("Internal Error! -- Null call"); return; }
+            Current.Objects = eObjects.Buffer.Text;
+        }
+
+
+        static void OnSettings(object sender, EventArgs e){
+            if (!editable) return;
+            if (Current == null) { QuickGTK.Error("Internal Error! -- Null call"); return; }
+            Current.Settings = eSettings.Buffer.Text;
+        }
+
 
         static void initGUI(){
             Application.Init();
@@ -257,17 +274,18 @@ namespace KthuraTextEditor
             WorkBox.Add(ofscroll);
             OpenFiles.SetSizeRequest(250, base_height - girl_height);
             OpenFiles.Gadget.CursorChanged += OnFileSelect;
-
             Tabber = new Notebook();
             Tabber.SetSizeRequest(base_width - 250, base_height - girl_height);
             var about = new Label("Kthura Text Editor\n\nCoded by: Tricky\n(c) Jeroen P. Broks\n\nReleased under the terms of the GPL 3\n\n" + MKL.All());
             about.SetAlignment(0, 0);
             eObjects = new TextView();
+            eObjects.Buffer.Changed += OnObjects;
             swObjects = new ScrolledWindow();
             swObjects.SetSizeRequest(base_width - 250, base_height - girl_height);
             swObjects.Add(eObjects);
             RequiresFile.Add(eObjects);
             eSettings = new TextView();
+            eSettings.Buffer.Changed += OnSettings;
             swSettings = new ScrolledWindow();
             swSettings.SetSizeRequest(base_width - 250, base_height - girl_height);
             swSettings.Add(eSettings);
