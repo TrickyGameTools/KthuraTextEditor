@@ -157,13 +157,20 @@ namespace KthuraTextEditor
             Console.WriteLine($"Loading: {file}");
             var j = JCR6.Dir(file);
             if (j == null) { QuickGTK.Error("JCR6 failed to analyse this mapfile\n\n" + JCR6.JERROR); return;  }
-            foreach(string musthave in kthuramusthave){
-                if (!j.Exists(musthave)) {
-                    QuickGTK.Error($"The required entry {musthave} does not appear to exist in this JCR6 file.\n\nAre you sure this is a Kthura map file?");
-                    return;
-                }
-            }
             var lkthura = new KthuraLoadedFile();
+            foreach (string musthave in kthuramusthave){
+                if (!j.Exists(musthave)) {
+                    if (musthave == "Settings") {
+                        System.Diagnostics.Debug.WriteLine("Settings was not found. Not a real problem since 'Settings' is now deprecated anyway!");
+                        lkthura.Settings = "-- This Kthura Map did not have a settings file.\n";
+                        lkthura.Settings += "-- This text will be put into it when you save.\n";
+                        lkthura.Settings += "-- Please note that 'Settings' is deprecated, and only included to be backward compatible with the first Kthura Map Editor (which is also deprecated)\n";
+                    } else {
+                        QuickGTK.Error($"The required entry {musthave} does not appear to exist in this JCR6 file.\n\nAre you sure this is a Kthura map file?");
+                        return;
+                    }
+                }
+            }            
             Loaded[file] = lkthura;
             lkthura.FileName = file;
             foreach (string e in j.Entries.Keys)
