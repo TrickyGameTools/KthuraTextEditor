@@ -26,6 +26,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Gtk;
 using TrickyUnits;
 using TrickyUnits.GTK;
@@ -104,7 +105,7 @@ namespace KthuraTextEditor
         static void initMKL(){
             MKL.Lic    ("Kthura Text Editor - Program.cs","GNU General Public License 3");
             MKL.Version("Kthura Text Editor - Program.cs","18.09.23");
-            QOpen.Hello();
+            QuickStream.Hello();
             QuickGTK.Hello();
             ListBox.Hello();
         }
@@ -181,8 +182,10 @@ namespace KthuraTextEditor
                 switch (e)
                 {
                     case "DATA":
+                        Debug.WriteLine("Loading Data");
                         lkthura.GeneralData = j.LoadStringMap("Data");
                         foreach(string k in lkthura.GeneralData.Keys){
+                            Debug.WriteLine($"Data.{k} = \"{lkthura.GeneralData[k]}\"");
                             lkthura.LsGenData.AppendValues(k, lkthura.GeneralData[k]);
                             //QuickGTK.Info($"{k} = {lkthura.GeneralData[k]}");
                         }
@@ -235,10 +238,11 @@ namespace KthuraTextEditor
                     else if (l < 50000000) { ln = $"{Math.Round((double)l / (1024 * 1024))} Megabytes"; }
                     else { ln= $"{Math.Round((double)l / (1024 * 1024 *1024))} Gigabytes"; }
                 }
+                Debug.WriteLine("File select data adept");
                 lsMisc.AppendValues(k, ln);
                 vMisc.Model = lsMisc;
-                eGeneralData.Model = Current.LsGenData;
             }
+                eGeneralData.Model = Current.LsGenData;
             editable = true;
 
         }
