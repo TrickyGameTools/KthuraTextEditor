@@ -215,7 +215,7 @@ namespace KthuraTextEditor
             Load(file);
         }
 
-        static void OnFileSelect(object sender, EventArgs a){
+        static void OnFileSelect(object sender, EventArgs a) {
             editable = false;
             AutoEnable();
             var i = OpenFiles.ItemText;
@@ -225,24 +225,19 @@ namespace KthuraTextEditor
             // Settings
             eSettings.Buffer.Text = Current.Settings;
             // Misc files (files this text editor cannot handle, but which should be loaded and saved anyway).
-            var lsMisc = new ListStore(typeof(string),typeof(string));
-            foreach(string k in Current.Unknown.Keys){
+            var lsMisc = new ListStore(typeof(string), typeof(string));
+            foreach (string k in Current.Unknown.Keys) {
                 var v = Current.Unknown[k];
                 var l = v.Length;
                 var ln = "Empty";
-                if (l > 0)
-                {
-                    if (l == 1) { ln = "One byte"; }
-                    else if ( l < 5000) { ln = $"{l} bytes"; }
-                    else if (l < 5000000) { ln = $"{Math.Round((double)l / 1024)} Kilobytes"; }
-                    else if (l < 50000000) { ln = $"{Math.Round((double)l / (1024 * 1024))} Megabytes"; }
-                    else { ln= $"{Math.Round((double)l / (1024 * 1024 *1024))} Gigabytes"; }
+                if (l > 0) {
+                    if (l == 1) { ln = "One byte"; } else if (l < 5000) { ln = $"{l} bytes"; } else if (l < 5000000) { ln = $"{Math.Round((double)l / 1024)} Kilobytes"; } else if (l < 50000000) { ln = $"{Math.Round((double)l / (1024 * 1024))} Megabytes"; } else { ln = $"{Math.Round((double)l / (1024 * 1024 * 1024))} Gigabytes"; }
                 }
                 Debug.WriteLine("File select data adept");
                 lsMisc.AppendValues(k, ln);
             }
-                vMisc.Model = lsMisc;
-                eGeneralData.Model = Current.LsGenData;
+            vMisc.Model = lsMisc;
+            eGeneralData.Model = Current.LsGenData;
             editable = true;
 
         }
