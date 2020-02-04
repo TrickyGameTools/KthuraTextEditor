@@ -240,8 +240,8 @@ namespace KthuraTextEditor
                 }
                 Debug.WriteLine("File select data adept");
                 lsMisc.AppendValues(k, ln);
-                vMisc.Model = lsMisc;
             }
+                vMisc.Model = lsMisc;
                 eGeneralData.Model = Current.LsGenData;
             editable = true;
 
